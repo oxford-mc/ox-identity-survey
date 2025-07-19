@@ -166,3 +166,4 @@ cython_debug/
 /bin/Debug/net8.0
 /obj
 /articles.json
+/data
