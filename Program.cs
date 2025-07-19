@@ -6,6 +6,10 @@
 
         var articleManager = new ArticleManager(@"C:\Development\Oxford\ox-identity-survey\articles.json");
         var scopus = new ScopusHelper(articleManager);
+        //articleManager.GetAbstractClusters(5);
+        articleManager.ExportCorpus();
+        articleManager.ClusterCustomWord2VecModel(75, 8, 200);
+        //articleManager.EvaluateWordClusterCoherence(2, 10, 100);
         articleManager.GetArticleCountByYear();
         articleManager.GetArticleCountByKeyword();
         articleManager.GetArticleCountBySubjectArea();
