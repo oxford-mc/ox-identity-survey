@@ -1,3 +1,10 @@
+awareness
+creating
+cross
+proposal
+creation
+beyond
+sector
 a
 about
 above
@@ -15,6 +22,7 @@ although
 always
 among
 an
+analysis
 and
 another
 any
@@ -22,6 +30,7 @@ anybody
 anyone
 anything
 anywhere
+approach
 are
 area
 areas
@@ -38,6 +47,8 @@ back
 backed
 backing
 backs
+base
+based
 be
 became
 because
@@ -64,9 +75,12 @@ case
 cases
 certain
 certainly
+challenge
+challenges
 clear
 clearly
 come
+conference
 could
 d
 did
@@ -99,6 +113,7 @@ everybody
 everyone
 everything
 everywhere
+exploring
 f
 face
 faces
@@ -161,8 +176,11 @@ how
 however
 i
 if
+impact
 important
 in
+innovation
+innovations
 interest
 interested
 interesting
@@ -271,7 +289,10 @@ parted
 parting
 parts
 per
+performance
 perhaps
+perspective
+perspectives
 place
 places
 point
@@ -283,6 +304,7 @@ present
 presented
 presenting
 presents
+proceedings
 problem
 problems
 put
@@ -292,6 +314,8 @@ quite
 r
 rather
 really
+research
+review
 right
 right
 room
@@ -334,6 +358,7 @@ state
 states
 still
 still
+study
 such
 sure
 t
@@ -367,6 +392,7 @@ together
 too
 took
 toward
+towards
 turn
 turned
 turning
@@ -381,6 +407,7 @@ us
 use
 used
 uses
+using
 v
 very
 w
@@ -414,6 +441,7 @@ work
 worked
 working
 works
+workshop
 would
 x
 y

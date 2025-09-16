@@ -1,4 +1,6 @@
-﻿internal class Program
+﻿using Scopus_Analysis.Helper;
+
+internal class Program
 {
     private async static Task Main(string[] args)
     {
@@ -6,13 +8,19 @@
 
         var articleManager = new ArticleManager(@"C:\Development\Oxford\ox-identity-survey\articles.json");
         var scopus = new ScopusHelper(articleManager);
-        //articleManager.GetAbstractClusters(5);
-        articleManager.ExportCorpus();
-        articleManager.ClusterCustomWord2VecModel(75, 8, 200);
-        //articleManager.EvaluateWordClusterCoherence(2, 10, 100);
+
+        NLPHelper.ExportCorpus(Path.Combine(articleManager._outputDirectory, "corpus.txt"), articleManager._cache, "abstracts-retrieval-response.coredata.dc:description");
+        
+        articleManager.ClusterCustomWord2VecModel(100, 8, 150);
         articleManager.GetArticleCountByYear();
         articleManager.GetArticleCountByKeyword();
+
+        /* Subject Related */
         articleManager.GetArticleCountBySubjectArea();
+        articleManager.GetTopArticlesPerSubject();
+        //articleManager.ExportTopArticlesPerSubject(10);
+
+        
         articleManager.GetArticleCountByAuthor();
         articleManager.GetAuthorCitations();
         articleManager.GetKeywordTrendsAsDelimitedStrings();
@@ -21,7 +29,6 @@
         articleManager.GetSubjectTrendRatiosByYear();
         articleManager.GetAverageCitationByYear();
         articleManager.GetArticleCountByYearAndKeyword();
-
 
         Console.ReadLine();
         var abstractsByYear = await scopus.FetchAbstractsByYear("\"digital identity\"", 2005, 2024);

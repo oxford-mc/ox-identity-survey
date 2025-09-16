@@ -6,7 +6,7 @@ class Trainer
     private static readonly int MinCount = 10;
     private const float sample = 1e-3f;
     private const float starting_alpha = 0.05f; // Starting learning rate.
-    private const int dimensions = 75;          // Word vector dimensions.
+    private const int dimensions = 100;          // Word vector dimensions.
     private const int exp_table_size = 1000;
     private const int iter = 5;                 // Training iterations.
     private const int max_exp = 6;
