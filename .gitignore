@@ -167,3 +167,4 @@ cython_debug/
 /obj
 /articles.json
 /data
+/data_archive
