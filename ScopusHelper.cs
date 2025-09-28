@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 public class ScopusHelper
 {
-    private const string ApiKey = "81374fa1211e543fc22b36194d3347";
-    private const string InstToken = "fac71269f3e0578e1f0de237e75b694";
+    private const string ApiKey = "<Insert here>";
+    private const string InstToken = "<Insert here>";
     private const string BaseUrl = "https://api.elsevier.com/content/search/scopus";
 
     private readonly HttpClient _httpClient;
