@@ -521,6 +521,139 @@ public class ArticleManager
         return result;
     }
 
+    // Articles per Author per Subject Area:
+    // Output: Dictionary<Author, Dictionary<Subject, Count>>
+    // CSV: author_subject_area_count.csv with columns Author,Subject,Count
+
+    public Dictionary<string, Dictionary<string, int>> GetArticleCountByAuthorBySubject()
+    {
+        var result = new Dictionary<string, Dictionary<string, int>>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var article in _cache.Values) // same source you used for authors
+        {
+            var root = article["abstracts-retrieval-response"];
+            if (root == null) continue;
+
+            // --- Extract authors ---
+            var authors = ExtractAuthors(root);
+            if (authors.Count == 0) continue;
+
+            // --- Extract subject areas ---
+            var subjects = ExtractSubjects(root);
+            if (subjects.Count == 0) subjects.Add("Unknown");
+
+            // --- Tally ---
+            foreach (var author in authors)
+            {
+                if (!result.TryGetValue(author, out var subjectCounts))
+                {
+                    subjectCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                    result[author] = subjectCounts;
+                }
+
+                foreach (var subject in subjects)
+                {
+                    subjectCounts.TryAdd(subject, 0);
+                    subjectCounts[subject]++;
+                }
+            }
+        }
+
+        // --- Console preview: top 20 authors with top 5 subjects each ---
+        Console.WriteLine("\n--- Articles per Author by Subject Area (preview) ---");
+        foreach (var (author, subjectCounts) in result
+                 .OrderByDescending(kv => kv.Value.Values.Sum())
+                 .Take(20))
+        {
+            var topSubjects = subjectCounts
+                .OrderByDescending(kv => kv.Value)
+                .Take(5)
+                .Select(kv => $"{kv.Key}={kv.Value}");
+            Console.WriteLine($"{author} -> {string.Join(", ", topSubjects)}");
+        }
+
+        // --- CSV (flat) ---
+        var csvPath = Path.Combine(_outputDirectory, "author_subject_area_count.csv");
+        var lines = new List<string> { "Author,Subject,Count" };
+        foreach (var (author, subjectCounts) in result.OrderBy(k => k.Key))
+        {
+            foreach (var (subject, count) in subjectCounts.OrderByDescending(kv => kv.Value))
+            {
+                lines.Add($"{Csv(author)},{Csv(subject)},{count}");
+            }
+        }
+        File.WriteAllLines(csvPath, lines);
+        Console.WriteLine("CSV saved to: " + csvPath);
+
+        return result;
+
+        // --- local helpers ---
+        static string Csv(string s) =>
+            s.Contains(',') || s.Contains('"') || s.Contains('\n')
+                ? $"\"{s.Replace("\"", "\"\"")}\""
+                : s;
+    }
+
+    /// <summary>
+    /// Extracts author display names from Scopus JSON:
+    /// ...["authors"]["author"][*]["ce:indexed-name"]
+    /// Handles array or single object.
+    /// </summary>
+    private static List<string> ExtractAuthors(JToken root)
+    {
+        var names = new List<string>();
+        var authorsRoot = root["authors"];
+        if (authorsRoot == null || authorsRoot.Type != JTokenType.Object) return names;
+
+        var authorToken = authorsRoot["author"];
+        if (authorToken == null) return names;
+
+        if (authorToken.Type == JTokenType.Array)
+        {
+            foreach (var a in authorToken)
+            {
+                var name = a?["ce:indexed-name"]?.ToString()?.Trim();
+                if (!string.IsNullOrEmpty(name)) names.Add(name);
+            }
+        }
+        else if (authorToken.Type == JTokenType.Object)
+        {
+            var name = authorToken["ce:indexed-name"]?.ToString()?.Trim();
+            if (!string.IsNullOrEmpty(name)) names.Add(name);
+        }
+
+        return names;
+    }
+
+    /// <summary>
+    /// Extracts subject area labels from Scopus JSON:
+    /// ...["subject-areas"]["subject-area"][*]["$"]
+    /// Falls back to empty list if not present.
+    /// </summary>
+    private static List<string> ExtractSubjects(JToken root)
+    {
+        var subjects = new List<string>();
+        var subjectAreas = root["subject-areas"]?["subject-area"];
+        if (subjectAreas == null) return subjects;
+
+        if (subjectAreas.Type == JTokenType.Array)
+        {
+            foreach (var s in subjectAreas)
+            {
+                var label = s?["$"]?.ToString()?.Trim();
+                if (!string.IsNullOrEmpty(label)) subjects.Add(label);
+            }
+        }
+        else if (subjectAreas.Type == JTokenType.Object)
+        {
+            var label = subjectAreas["$"]?.ToString()?.Trim();
+            if (!string.IsNullOrEmpty(label)) subjects.Add(label);
+        }
+
+        return subjects;
+    }
+
+
     private static void WriteToConsole(Dictionary<string, int> result, string name, int count = 100)
     {
         Console.WriteLine(name);
@@ -1020,7 +1153,7 @@ public class ArticleManager
         //var filePath = Path.Combine(_outputDirectory, "corpus.txt");
         //var modelPath = Path.Combine(_outputDirectory, "model.bin");
 
-        NLPHelper.BuildCorpusModel(_outputDirectory);
+        
 
         // Step 1: Load Word2Vec .bin vectors
         var allVectors = NLPHelper.LoadWord2VecTxt(_outputDirectory, dimensions);

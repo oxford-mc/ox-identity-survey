@@ -1,16 +1,17 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using Porter2Stemmer;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using Porter2Stemmer;
 
 public class ScopusHelper
 {
-    private const string ApiKey = "81374fafb11e543fc9622b36194d3947";
-    private const string InstToken = "fac75069f3e0572c8e1f0de37e75b694";
+    private const string ApiKey = "81374fa1211e543fc22b36194d3347";
+    private const string InstToken = "fac71269f3e0578e1f0de237e75b694";
     private const string BaseUrl = "https://api.elsevier.com/content/search/scopus";
 
     private readonly HttpClient _httpClient;
@@ -70,6 +71,13 @@ public class ScopusHelper
                         if (_articleManager.TryGet(scopusId, out JObject cached))
                         {
                             var abstractText = cached["abstracts-retrieval-response"]?["coredata"]?["dc:description"]?.ToString();
+
+                            var dir = @"C:\Development\Oxford\ox-endgame\Files\A1";
+                            Directory.CreateDirectory(dir); // no-op if it already exists
+
+                            var filePath = Path.Combine(dir, $"{Guid.NewGuid():N}.txt");
+                            File.WriteAllText(filePath, abstractText ?? string.Empty, Encoding.UTF8);
+
                             if (!string.IsNullOrWhiteSpace(abstractText))
                                 yearAbstracts.Add(abstractText);
                         }

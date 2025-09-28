@@ -37,7 +37,7 @@ namespace Scopus_Analysis.Helper
 
             string corpusTrainingFilePath = path;
             //string modelFilePath = corpusTrainingFilePath + ".model.bin";
-            var shouldBuildModel = false;
+            var shouldBuildModel = true;
 
             if (!File.Exists(modelFilePath))
             {
