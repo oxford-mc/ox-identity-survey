@@ -171,3 +171,17 @@ cython_debug/
 /data[2005-2024]
 /data[2005-2024]
 /data[2005-2024]
+/data[2005-2024]/article_count_by_year.csv
+/data[2005-2024]/article_count_by_year_and_keyword.csv
+/data[2005-2024]/author_article_count.csv
+/data[2005-2024]/author_citations.csv
+/data[2005-2024]/author_subject_area_count.csv
+/data[2005-2024]/average_citations_by_year.csv
+/data[2005-2024]/corpus.txt
+/data[2005-2024]/custom_word2vec_clusters.csv
+/data[2005-2024]/keyword_count.csv
+/data[2005-2024]/keyword_ratios_by_year.csv
+/data[2005-2024]/keyword_trends_by_year.csv
+/data[2005-2024]/model.bin
+/data[2005-2024]/model.txt
+/data[2005-2024]/subject_area_count.csv
